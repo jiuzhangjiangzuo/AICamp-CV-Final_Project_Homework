@@ -1,0 +1,5 @@
+tensorflow==1.7
+Flask
+Flask-Bootstrap
+numpy
+opencv-python

@@ -3,25 +3,23 @@
 {% block title %}首页{% endblock %}
 
 {% block page_content %}
-<form id="form" class="form-inline" action="upload_images" method="post" enctype="multipart/form-data">
+<form id="form" class="form-inline" method="post" enctype="multipart/form-data">
 	<div class="container" style="top: 200px">
 		<div class="col-sm-4" style="padding-top: 80px; padding-left: 60px">
-			<input id="file1" type="file" class="" name="file" onchange="readURL(this, '#img1');">
+			<input id="file1" type="file" class="" name="file1" onchange="readURL(this, '#img1');">
 			<div class="image-top-buffer">
 			    <img id="img1" class="img-responsive img-rounded">
 			</div>
 		</div>
 
 		<div class="col-sm-4" style="padding-top: 80px; padding-left: 60px">
-
-			<input id="file2" type="file" class="" name="file" onchange="readURL(this, '#img2');">
-
+			<input id="file2" type="file" class="" name="file2" onchange="readURL(this, '#img2');">
 			<div class="image-top-buffer">
 				<img id="img2" class="img-responsive img-rounded">
 			</div>
 		</div>
 		<div class="col-sm-12" style="padding-top: 80px; padding-left: 60px">
-			<button type="submit" class="btn btn-success">Upload</button>
+			<button id="submit" class="btn btn-success">Upload</button>
 		</div>
     </div>
 </form>
