@@ -1,5 +1,5 @@
 $(function() {
-    $('#submit').click(function() {
+    $('#form').unbind('submit').submit(function() {
         event.preventDefault();
         var form_data = new FormData($('#form')[0]);
         console.log(form_data);
@@ -13,11 +13,10 @@ $(function() {
         }).done(function(data){
             console.log(data);
             console.log('Success!');
-            alert(data.result + '\n' + 'The score is: ' + data.score)
+            alert(data.result + '\n' + 'The face distance is: ' + data.score)
         }).fail(function(data){
             alert('error!');
         });
-        
         return false;
     });
 }); 

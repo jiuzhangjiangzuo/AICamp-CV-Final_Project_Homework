@@ -7,11 +7,10 @@ from flask import (
     Flask,
     request,
     render_template,
-    send_from_directory,
-    url_for,
     jsonify
 )
 from flask_bootstrap import Bootstrap
+
 from detect.MtcnnDetector import MtcnnDetector
 from detect.detector import Detector
 from detect.fcn_detector import FcnDetector
@@ -85,24 +84,6 @@ face_net = FaceNet(model_path)
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
-@app.context_processor
-def override_url_for():
-    return dict(url_for=dated_url_for)
-
-def dated_url_for(endpoint, **values):
-    if endpoint == 'js_static':
-        filename = values.get('filename', None)
-        if filename:
-            file_path = os.path.join(app.root_path,
-                                     'static/js', filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
-    return url_for(endpoint, **values)
-
-@app.route('/js/<path:filename>')
-def js_static(filename):
-    return send_from_directory(app.root_path + '/static/js/', filename)
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -160,4 +141,4 @@ def get_score():
 
 
 if __name__ == "__main__":
-    app.run(debug = True, host='0.0.0.0')
+    app.run(host='0.0.0.0')
