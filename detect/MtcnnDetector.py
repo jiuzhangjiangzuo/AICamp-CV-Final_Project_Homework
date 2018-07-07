@@ -189,55 +189,9 @@ class MtcnnDetector(object):
         boxes_c: numpy array
             boxes after calibration
         """
-        h, w, c = im.shape
-        net_size = 12
         
-        current_scale = float(net_size) / self.min_face_size  # find initial scale
-        # print("current_scale", net_size, self.min_face_size, current_scale)
-        im_resized = self.processed_image(im, current_scale)
-        current_height, current_width, _ = im_resized.shape
-        # fcn
-        all_boxes = list()
-        while min(current_height, current_width) > net_size:
-            #return the result predicted by pnet
-            #cls_cls_map : H*w*2
-            #reg: H*w*4
-            cls_cls_map, reg = self.pnet_detector.predict(im_resized)
-            #boxes: num*9(x1,y1,x2,y2,score,x1_offset,y1_offset,x2_offset,y2_offset)
-            boxes = self.generate_bbox(cls_cls_map[:, :,1], reg, current_scale, self.thresh[0])
-
-            current_scale *= self.scale_factor
-            im_resized = self.processed_image(im, current_scale)
-            current_height, current_width, _ = im_resized.shape
-
-            if boxes.size == 0:
-                continue
-            keep = py_nms(boxes[:, :5], 0.5, 'Union')
-            boxes = boxes[keep]
-            all_boxes.append(boxes)
-
-        if len(all_boxes) == 0:
-            return None, None, None
-
-        all_boxes = np.vstack(all_boxes)
-
-        # merge the detection from first stage
-        keep = py_nms(all_boxes[:, 0:5], 0.7, 'Union')
-        all_boxes = all_boxes[keep]
-        boxes = all_boxes[:, :5]
-
-        bbw = all_boxes[:, 2] - all_boxes[:, 0] + 1
-        bbh = all_boxes[:, 3] - all_boxes[:, 1] + 1
-
-        # refine the boxes
-        boxes_c = np.vstack([all_boxes[:, 0] + all_boxes[:, 5] * bbw,
-                             all_boxes[:, 1] + all_boxes[:, 6] * bbh,
-                             all_boxes[:, 2] + all_boxes[:, 7] * bbw,
-                             all_boxes[:, 3] + all_boxes[:, 8] * bbh,
-                             all_boxes[:, 4]])
-        boxes_c = boxes_c.T
-
-        return boxes, boxes_c, None
+        # !!!!!!!!!!!!!!!!! Implement here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return None, None, None
         
 
     def detect_rnet(self, im, dets):

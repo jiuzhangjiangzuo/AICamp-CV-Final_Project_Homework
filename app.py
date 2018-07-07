@@ -88,24 +88,6 @@ bootstrap = Bootstrap(app)
 def index():
     return render_template('index.html')
     
-    
-def calc_score(img1, img2):
-    thresh = 0.35
-    
-    faces1 = mtcnn_detector.get_face_from_single_image(img1)
-    faces2 = mtcnn_detector.get_face_from_single_image(img2)
-
-    if len(faces1) != 1 or len(faces2) != 1:
-        return 'Please upload image with exact one person.', 0
-
-    emb1 = face_net.predict(faces1[0])
-    emb2 = face_net.predict(faces2[0])
-
-    score = np.sqrt(np.sum(np.square(np.subtract(emb1, emb2))))
-    if score < thresh:
-        return 'Same person', str(score)
-    else:
-        return 'Not same person', str(score)
 
 def calc_score_with_version2_detector(img1, img2):
     thresh = 0.8
@@ -125,6 +107,23 @@ def calc_score_with_version2_detector(img1, img2):
     else:
         return 'Not same person', str(score)
     
+def calc_score(img1, img2):
+    thresh = 0.35
+    
+    faces1 = mtcnn_detector.get_face_from_single_image(img1)
+    faces2 = mtcnn_detector.get_face_from_single_image(img2)
+
+    if len(faces1) != 1 or len(faces2) != 1:
+        return 'Please upload image with exact one person.', 0
+
+    emb1 = face_net.predict(faces1[0])
+    emb2 = face_net.predict(faces2[0])
+
+    score = np.sqrt(np.sum(np.square(np.subtract(emb1, emb2))))
+    if score < thresh:
+        return 'Same person', str(score)
+    else:
+        return 'Not same person', str(score)
     
 @app.route('/get_score', methods=['POST'])
 def get_score():
@@ -134,7 +133,7 @@ def get_score():
         img1 = cv2.imdecode(np.fromstring(files1.read(), np.uint8), cv2.IMREAD_COLOR)
         img2 = cv2.imdecode(np.fromstring(files2.read(), np.uint8), cv2.IMREAD_COLOR)
         
-        result, score = calc_score_with_version2_detector(img1, img2)
+        result, score = calc_score(img1, img2)
         return jsonify(result=result, score=score)
 
         
